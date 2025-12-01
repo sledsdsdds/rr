@@ -1,42 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
 /**
  * @brief рассчитывает объем параллелепипеда
  * @param length длина параллелепипеда
- * @param width ширина параллелепипеда  
+ * @param width ширина параллелепипеда
  * @param height высота параллелепипеда
  * @return возвращает рассчитанный объем
  */
+
 double getVolume(const double length, const double width, const double height);
 
 /**
  * @brief рассчитывает площадь поверхности параллелепипеда
  * @param length длина параллелепипеда
  * @param width ширина параллелепипеда
- * @param height высота параллелепипеда
+ * @param height высота параллелепипеда 
  * @return возвращает рассчитанную площадь поверхности
  */
+
 double getSurfaceArea(const double length, const double width, const double height);
 
 /**
  * @brief считывает значение, введенное с клавиатуры с проверкой ввода
  * @return считанное значение
  */
+
 double getValue();
 
 /**
  * @brief проверяет, что переменная положительная
  * @param value значение проверяемой переменной
  */
+
 void checkValue(const double value);
 
 /**
  * @brief Точка входа в программу
  * @return возвращает 0, если программа выполнена корректно
  */
+
 int main(void)
 {
+    setlocale(LC_ALL, "Russian");
     printf("Введите длину, ширину и высоту параллелепипеда: ");
     double length = getValue();
     checkValue(length);
@@ -44,7 +51,7 @@ int main(void)
     checkValue(width);
     double height = getValue();
     checkValue(height);
-    
+
     printf("Объем равен: %.2lf", getVolume(length, width, height));
     printf("Площадь поверхности равна: %.2lf", getSurfaceArea(length, width, height));
 
@@ -64,7 +71,7 @@ double getSurfaceArea(const double length, const double width, const double heig
 double getValue()
 {
     double value = 0;
-    if (!scanf("%lf",&value))
+    if (!scanf_s("%lf", &value))
     {
         printf("Error\n");
         abort();
@@ -74,7 +81,7 @@ double getValue()
 
 void checkValue(const double value)
 {
-    if (value <= 0 )
+    if (value <= 0)
     {
         printf("Value have to be positive\n");
         abort();
