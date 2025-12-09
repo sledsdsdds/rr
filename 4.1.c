@@ -72,7 +72,10 @@ void replaceEvenElements(int* copyArr, const size_t size);
  * @brief MANUAL - заполнение массива вручную
  */
 enum { RANDOM = 1, MANUAL };
-
+/**
+ * @brief Точка входа в программу
+ * @return Возвращает 0, если программа выполнена корректно, иначе 1
+ */
 int main(void)
 {
     size_t size = getSize("Введите размер массива:  ");
