@@ -6,91 +6,86 @@
 #include <locale.h>
 
 /**
- * @brief считывает значение,
- * введенное с клавиатуры с проверкой ввода
- * @return считанное значение
- */
-double getValue();
+*@brief Считывает значение, введенное с клавиатуры с проверкой ввода
+*@return считанное значение
+*/
+double value();
+
+/**
+*@brief Рассчитывает значение по заданной функции
+*@param x значение переменной
+*@return рассчитанное значение переменной или NAN при ошибке
+*/
+double func(const double x);
 
 /**
  * @brief проверяет,что переменная положительная
  * @param step значение проверяемой переменной
  */
-void checkStep(const double step);
-
-/**
- * @brief проверяет, принадлежит ли значение аргумента функции
- * её области определения
- * @param x - аргумент функции
- * @return true, если аргумент принадлежит ООФ, иначе false
- */
-bool defineOOF(const double x);
-
-/**
- * @brief рассчитывает значение функции y по заданной формуле
- * @param x значение
- * @return
- */
-double getY(const double x);
-
+void steps(const double step);
 
 int main()
 {
-    // SetConsoleCP(1251); // Установка кодовой страницы win-cp 1251 в поток ввода (для Windows)
-    // SetConsoleOutputCP(1251); // Установка кодовой страницы win-cp 1251 в поток вывода (для Windows)
-
     setlocale(LC_ALL, "Russian");
     printf("Введите начальное значение: ");
-    double start = getValue();
-    printf("Введите конечное значение: ");
-    double end = getValue();
-    printf("Введите шаг: ");
-    double step = getValue();
-    checkStep(step);
+    double start = value();
 
-    for (double x = start; x < end + DBL_EPSILON; x = x + step)
+    printf("Введите конечное значение: ");
+    double end = value();
+
+    printf("Введите шаг: ");
+    double step = value();
+    steps(step);
+
+    double x = start;
+    printf("\nРезультаты табулирования функции y = 0.1x² - x*ln(x):\n");
+
+    while (x < end + DBL_EPSILON)
     {
-        if (defineOOF(x))
+        double y = func(x);
+        if (isnan(y))
         {
-            printf("x = %.2lf, y = %.4lf\n", x, getY(x));
+            printf("x = %.2lf, y = не существует (x должен быть > 0)\n", x);
         }
         else
         {
-            printf("x = %.2lf, не принадлежит ООФ\n", x);
+            printf("x = %.2lf, y = %.4lf\n", x, y);
         }
+        x = x + step;
     }
 
     return 0;
 }
 
-double getValue()
+double value()
 {
     double value = 0;
-    if (!scanf_s("%lf", &value)) // scanf_s заменен на scanf для переносимости
+    if (!scanf_s("%lf", &value))
     {
-        printf("Error\n");
+        printf("Вы ввели неверное значение!\n");
         abort();
     }
     return value;
 }
 
-void checkStep(const double step)
+void steps(const double step)
 {
     if (step <= DBL_EPSILON)
     {
-        printf("Ошибка, шаг должен быть положительным\n");
+        printf("Ошибка! Шаг должен быть положительным!\n");
         abort();
     }
 }
 
-bool defineOOF(const double x)
+double func(const double x)
 {
-    // Область определения функции y = 0.1*x^2 - x*ln(x): x > 0
-    return x > 0.0;
-}
+    // Функция: y = 0.1x^2 - x*ln(x)
+    // Область определения: x > 0 (логарифм определен только для положительных чисел)
 
-double getY(const double x)
-{
-    // Расчет значения функции y = 0.1*x^2 - x*ln(x)
-    return 0.1 * x * x - x * log(x);
+    if (x <= 0)
+    {
+        return NAN; // Возвращаем "не число" для недопустимых значений
+    }
+
+    return 0.1 * pow(x, 2) - x * log(x);
 }
