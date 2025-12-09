@@ -82,7 +82,7 @@ int main(void)
         printf("error");
         exit(1);
     }
-    printf("Выберите способ заполнения массива:\n"
+    printf("Выберите способ заполнения массива:\n");
         "%d случайными числами %d вручную ", RANDOM, MANUAL);
     int choice = Value();
     switch (choice)
