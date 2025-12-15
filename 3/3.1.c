@@ -22,7 +22,7 @@ double func(const double x);
  * @brief проверяет,что переменная положительная
  * @param step значение проверяемой переменной
  */
-void steps(const double step);
+void checkStep(const double step);
 
 int main()
 {
@@ -35,10 +35,10 @@ int main()
 
     printf("Введите шаг: ");
     double step = value();
-    steps(step);
+    checkStep(step);
 
     double x = start;
-    printf("\nРезультаты табулирования функции y = 0.1x² - x*ln(x):\n");
+    printf("\nРезультаты табулирования функции y = 0.1x^2 - x*ln(x):\n");
 
     while (x < end + DBL_EPSILON)
     {
@@ -68,13 +68,18 @@ double value()
     return value;
 }
 
-void steps(const double step)
+void checkStep(const double step)
 {
     if (step <= DBL_EPSILON)
     {
-        printf("Ошибка! Шаг должен быть положительным!\n");
+        printf("Ошибка, шаг должен быть положительным\n");
         abort();
     }
+}
+
+bool defineOOF(const double x)
+{
+    return x > 0;
 }
 
 double func(const double x)
