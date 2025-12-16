@@ -14,7 +14,7 @@ int Value();
  * @param message текстовое сообщение о необходимости ввода размера массива
  * @return размер массива
  */
-size_t getSize(char* message);
+size_t getSize(const char* message);
 
 /**
  * @brief считывает значения элементов массива с клавиатуры
@@ -27,14 +27,14 @@ void fillArray(int* arr, const size_t size);
  * @param arr массив для вывода
  * @param size размер массива
  */
-void printArray(int* arr, const size_t size);
+void printArray(const int* arr, const size_t size);
 /**
  * @brief вычисляет сумму всех элементов массива
  * @param arr массив
  * @param size размер массива
  * @return сумма элементов массива
  */
-int sumArray(int* arr, const size_t size);
+int sumArray(const int* arr, const size_t size);
 /**
  * @brief сортирует элементы массива по возрастанию
  * @param arr массив для сортировки
@@ -47,7 +47,7 @@ void sortArry(int* arr, const size_t size);
  * @param size размер массива
  * @return сумма нечетных элементов массива
  */
-int sumNchetn(int* arr, const size_t size);
+int sumNchetn(const int* arr, const size_t size);
 /**
  * @brief заполняет массив случайными числами в заданном диапазоне
  * @param arr массив для заполнения
@@ -66,6 +66,16 @@ int* copyArray(const int* arr, const size_t size);
  * @param copyArr массив для модификации
  * @param size размер массива
  */
+int* allocateInArray(size_t size) 
+{
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == NULL) 
+    {
+        printf("Ошибка выделения памяти\n");
+        exit(1);
+    }
+    return arr;
+}
 void replaceEvenElements(int* copyArr, const size_t size);
 /**
  * @brief RANDOM - заполнение массива случайными числами
@@ -78,28 +88,23 @@ enum { RANDOM = 1, MANUAL };
  */
 int main(void)
 {
-    size_t size = getSize("Введите размер массива:  ");
-    int* arr = (int*)malloc(size * sizeof(int));
-    if (arr == NULL)
-    {
-        printf("error");
-        exit(1);
-    }
-    printf("Выберите способ заполнения массива:\n");
+    size_t size = getSize("Введите размер массива:");
+    int* arr = allocateInArray(size);
+    printf("Выберите способ заполнения массива:\n"
         "%d случайными числами %d вручную ", RANDOM, MANUAL);
-    int choice = Value();
-    switch (choice)
-    {
-    case RANDOM:
-        fillRandom(arr, size);
-        break;
-    case MANUAL:
-        fillArray(arr, size);
-        break;
-    default:
-        printf("error");
-        free(arr);
-        break;
+        int choice = Value();
+        switch(choice)
+        {
+        case RANDOM:
+            fillRandom(arr, size);
+            break;
+        case MANUAL:
+            fillArray(arr, size);
+            break;
+        default:
+            printf("error");
+            free(arr);
+            exit(1);
     }
 
     printArray(arr, size);
@@ -114,6 +119,7 @@ int main(void)
     return 0;
 }
 
+
 int Value()
 {
     int value = 0;
@@ -125,7 +131,7 @@ int Value()
     return value;
 }
 
-size_t getSize(char* message)
+size_t getSize(const char* message)
 {
     printf("%s", message);
     int value = Value();
@@ -146,7 +152,7 @@ void fillArray(int* arr, const size_t size)
     }
 }
 
-void printArray(int* arr, const size_t size)
+void printArray(const int* arr, const size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -155,7 +161,7 @@ void printArray(int* arr, const size_t size)
     printf("");
 }
 
-int sumArray(int* arr, const size_t size)
+int sumArray(const int* arr, const size_t size)
 {
     int result = 0;
     for (size_t i = 0; i < size; i++)
@@ -181,7 +187,7 @@ void sortArry(int* arr, const size_t size)
     }
 }
 
-int sumNchetn(int* arr, const size_t size)
+int sumNchetn(const int* arr, const size_t size)
 {
     int result = 0;
     for (size_t i = 0; i < size; i++)
