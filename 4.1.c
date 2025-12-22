@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define scanf_s scanf
+#include <locale.h>
 
 /**
  * @return Ввод данных типа int
@@ -66,16 +66,8 @@ int* copyArray(const int* arr, const size_t size);
  * @param copyArr массив для модификации
  * @param size размер массива
  */
-int* allocateInArray(size_t size) 
-{
-    int* arr = (int*)malloc(size * sizeof(int));
-    if (arr == NULL) 
-    {
-        printf("Ошибка выделения памяти\n");
-        exit(1);
-    }
-    return arr;
-}
+int* allocateInArray(size_t size);
+
 void replaceEvenElements(int* copyArr, const size_t size);
 /**
  * @brief RANDOM - заполнение массива случайными числами
@@ -88,6 +80,7 @@ enum { RANDOM = 1, MANUAL };
  */
 int main(void)
 {
+    setlocale(LC_ALL, "Russian");
     size_t size = getSize("Введите размер массива:");
     int* arr = allocateInArray(size);
     printf("Выберите способ заполнения массива:\n"
@@ -119,6 +112,16 @@ int main(void)
     return 0;
 }
 
+int* allocateInArray(size_t size)
+{
+    int* arr = (int*)malloc(size * sizeof(int));
+    if (arr == NULL)
+    {
+        printf("Ошибка выделения памяти\n");
+        exit(1);
+    }
+    return arr;
+}
 
 int Value()
 {
