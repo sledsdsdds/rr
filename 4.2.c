@@ -57,20 +57,24 @@ int* copyArray(const int* arr, const size_t size);
  * @brief Функция, которая создаёт новый массив, в котором отсутствуют числа, первая и последняя цифра которых чётная
  * @return Этот массив
  */
-void newArray(int* arr, int* new_arr, const size_t size, const int new_size);
+void newArray(int* arr, int* new_arr, const size_t size, int new_size);
 
 /**
  * @brief Функция, которая считает новый массив по правилу: элементы c 3-его по 12-ый находятся по формуле A(i)=(-1)*(D(i)*D(i)), остальные по формуле A(i)=D(i)-1
  * @return Этот массив
  */
-void lastArray(int* arrx, int* last_arr, const size_t size);
-
+void lastArray(const int* arr, int* last_arr, const size_t size);
+/**
+ * @brief проверяет успешность выделения памяти
+ * @param ptr указатель для проверки
+ * @note завершает программу при ошибке выделения памяти
+ */
+void checkArray(void* ptr);
 /**
 * @brief RANDOM - рандоминое заполнение массива
 * @brief MANUAL - заполнение массива вручную
 */
 enum { RANDOM, MANUAL };
-
 /**
  * @brief Точка входа в программу
  * @return Возвращает 0, если программа выполнена корректно
@@ -80,11 +84,7 @@ int main(void)
     setlocale(LC_ALL, "Russian");
     size_t size = getSize("Введите размер массива: ");
     int* arr = (int*)malloc(size * sizeof(int));
-    if (arr == NULL)
-    {
-        printf("Error\n");
-        abort();
-    }
+    checkArray(arr);
     printf("Введите способ заполнения массива:\n %d = случайными числами, %d = вводом с клавиатуры \n", RANDOM, MANUAL);
     int choice = getValue();
     switch (choice)
@@ -106,15 +106,10 @@ int main(void)
     int* copy_arr = copyArray(arr, size);
     printf("Массив, где минимальный по модулю положительный элемент заменён на 0:\n");
     zamena_arr(copy_arr, size, minimal);
-    int new_size = 1;
-    int* new_arr = (int*)malloc(new_size * sizeof(int));
-    if (new_arr == NULL)
-    {
-        printf("Error\n");
-        abort();
-    }
+    int* new_arr = (int*)malloc(size * sizeof(int));
+    checkArray(new_arr);
     printf("Массив, из которого удалены элементы, у которых первая и последняя цифры чётные:\n");
-    newArray(arr, new_arr, size, new_size);
+    newArray(arr, new_arr, size, size);
     int* last_arr = copyArray(arr, size);
     printf("новый массив по правилу: элементы с 3-его по 12-ый находятся по формуле A(i)=(-1)a(D(i)*D(i)), остальные по формуле A(i)=D(i)-1 \n");
     lastArray(arr, last_arr, size);
@@ -146,6 +141,15 @@ int getValue()
         abort();
     }
     return value;
+}
+
+void checkArray(void* ptr)
+{
+    if (ptr == NULL)
+    {
+        printf("Ошибка выделения памяти\n");
+        exit(1);
+    }
 }
 
 void fillrandom(int* arr, const size_t size)
@@ -204,33 +208,38 @@ void zamena_arr(int* arr, const size_t size, int minimal)
     printArray(arr, size);
 }
 
-int* copyArray(const int* apr, const size_t size)
+int* copyArray(const int* arr, const size_t size)
 {
     int* copyArr = (int*)malloc(size * sizeof(int));
+    checkArray(copyArr);
     for (size_t i = 0; i < size; i += 1)
     {
         copyArr[i] = arr[i];
     }
     return copyArr;
 }
-
 void newArray(int* arr, int* new_arr, const size_t size, int new_size)
 {
-    new_size -= 1;
+    int index = 0;
     for (size_t i = 0; i < size; i += 1)
     {
-        char number[20];
-        sprintf_s(number, "%d", arr[i]);
-        if (!(((arr[i] % 10) % 2 == 0) && (((int)number[0]) % 2 == 0)))
+        int last_digit = arr[i] % 10;
+        int first_digit = arr[i];
+        if (first_digit < 0) {
+            first_digit = -first_digit;
+        }
+        while (first_digit >= 10) {
+            first_digit /= 10;
+        }
+        if (!((last_digit % 2 == 0) && (first_digit % 2 == 0)))
         {
-            new_arr[new_size] = arr[i];
-            new_size += 1;
+            new_arr[index] = arr[i];
+            index += 1;
         }
     }
-    printArray(new_arr, new_size);
+    printArray(new_arr, index);
 }
-
-void lastArray(int* arr, int* last_arr, const size_t size)
+void lastArray(const int* arr, int* last_arr, const size_t size)
 {
     for (size_t i = 0; i < size; i += 1)
     {
