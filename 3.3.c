@@ -100,7 +100,7 @@ double getDouble()
 void checkMinMax(const double min, const double max)
 
 {
-    if (min > max || fabs(min - max) <= DBL_EPSILON)
+    if (fabs(min - max) <= DBL_EPSILON)
 
     {
         printf("Error\n");
@@ -111,7 +111,7 @@ void checkMinMax(const double min, const double max)
 
 void checkStep(const double step) 
 {
-    if (step <= 0)
+    if (step <= DBL_EPSILON)
 
     {
         printf("Error\n");
@@ -122,7 +122,7 @@ void checkStep(const double step)
 void checkPositive(const double value)
 
 {
-    if (value < 0)
+    if (value < -DBL_EPSILON)
     {
         printf("Error\n");
         exit(1);
