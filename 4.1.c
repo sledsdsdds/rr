@@ -62,13 +62,23 @@ void fillRandom(int* arr, const size_t size);
  */
 int* copyArray(const int* arr, const size_t size);
 /**
- * @brief изменяет четные элементы массива, умножая их на -1
- * @param copyArr массив для модификации
- * @param size размер массива
+ * @brief выделяет память для одномерного массива целых чисел
+ * @param size количество элементов в массиве
+ * @return указатель на выделенную память
  */
 int* allocateInArray(size_t size);
-
-void replaceEvenElements(int* copyArr, const size_t size);
+/**
+ * @brief изменяет четные элементы массива, умножая их на -1
+ * @param arr массив для модификации
+ * @param size размер массива
+ */
+void replaceEvenElements(int* arr, const size_t size);
+/**
+ * @brief проверяет успешность выделения памяти
+ * @param ptr указатель для проверки
+ * @note завершает программу при ошибке выделения памяти
+ */
+void checkArray(void* ptr);
 /**
  * @brief RANDOM - заполнение массива случайными числами
  * @brief MANUAL - заполнение массива вручную
@@ -85,19 +95,19 @@ int main(void)
     int* arr = allocateInArray(size);
     printf("Выберите способ заполнения массива:\n"
         "%d случайными числами %d вручную ", RANDOM, MANUAL);
-        int choice = Value();
-        switch(choice)
-        {
-        case RANDOM:
-            fillRandom(arr, size);
-            break;
-        case MANUAL:
-            fillArray(arr, size);
-            break;
-        default:
-            printf("error");
-            free(arr);
-            exit(1);
+    int choice = Value();
+    switch (choice)
+    {
+    case RANDOM:
+        fillRandom(arr, size);
+        break;
+    case MANUAL:
+        fillArray(arr, size);
+        break;
+    default:
+        printf("error");
+        free(arr);
+        exit(1);
     }
 
     printArray(arr, size);
@@ -111,15 +121,19 @@ int main(void)
     free(arr);
     return 0;
 }
-
-int* allocateInArray(size_t size)
+void checkArray(void* ptr)
 {
-    int* arr = (int*)malloc(size * sizeof(int));
-    if (arr == NULL)
+    if (ptr == NULL)
     {
         printf("Ошибка выделения памяти\n");
         exit(1);
     }
+}
+
+int* allocateInArray(size_t size)
+{
+    int* arr = (int*)malloc(size * sizeof(int));
+    checkArray(arr);
     return arr;
 }
 
